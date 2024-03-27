@@ -1,7 +1,6 @@
 asgiref==3.8.0
 Babel==2.14.0
 Django==4.2.11
-django-money==3.4.1
 flake8==7.0.0
 isort==5.13.2
 mccabe==0.7.0
