@@ -130,11 +130,11 @@ class Cashback(models.Model):
     payment = models.ForeignKey(
         Payment, on_delete=models.CASCADE, related_name="follower"  # !
     )
-    amount = MoneyField(
-        max_digits=14, decimal_places=2, default_currency='RUB'
+    amount = models.DecimalField(
+        max_digits=14, decimal_places=2
     )
     status = ...
-    balance = MoneyField(
-        max_digits=14, decimal_places=2, default_currency='RUB'
+    balance = models.DecimalField(
+        max_digits=14, decimal_places=2
     )
     interest_rate = ...
