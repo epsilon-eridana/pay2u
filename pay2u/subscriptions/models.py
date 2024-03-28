@@ -69,8 +69,8 @@ class Service(models.Model):
 
 
 class Payment(models.Model):
-    amount = MoneyField(
-        max_digits=14, decimal_places=2, default_currency='RUB'
+    amount = models.DecimalField(
+        max_digits=14, decimal_places=2
     )
     date = models.DateTimeField(
         'Дата оплаты', auto_now_add=True, db_index=True
