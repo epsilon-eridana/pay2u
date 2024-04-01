@@ -16,7 +16,6 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
-    "djmoney",
     "api.apps.ApiConfig",
     "subscriptions.apps.SubscriptionsConfig",
     "django.contrib.admin",

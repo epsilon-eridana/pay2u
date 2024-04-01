@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from pay2u.constants import MAX_LIMIT_VALUE, MIN_LIMIT_VALUE
-
 User = get_user_model()
+MAX_LIMIT_VALUE = 10000
+MIN_LIMIT_VALUE = 1
 
 
 class Category(models.Model):
@@ -118,7 +118,7 @@ class Service(models.Model):
     )
     category = models.ForeignKey(
         Category,
-        on_delete=models,
+        on_delete=models.CASCADE,
         related_name='services',
         verbose_name='Категория'
     )
@@ -157,13 +157,14 @@ class ServiceRate(models.Model):
     service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
-        related_name='Сервис подписки'
+        related_name='service_rate',
+        verbose_name='Сервис'
     )
-    rate = models.ForeignKey(
+    rate = models.OneToOneField(
         Rate,
-        unique=True,
         on_delete=models.CASCADE,
-        related_name='Тариф сервиса'
+        related_name='service_rate',
+        verbose_name='Тариф'
     )
 
     class Meta:
@@ -180,13 +181,14 @@ class ServiceOptions(models.Model):
     service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
-        related_name='Сервис подписки'
+        related_name='service_option',
+        verbose_name='Сервис подписки'
     )
-    option = models.ForeignKey(
+    option = models.OneToOneField(
         Options,
-        unique=True,
         on_delete=models.CASCADE,
-        related_name='Опция сервиса'
+        related_name='service_option',
+        verbose_name='Опция сервиса'
     )
 
     class Meta:
