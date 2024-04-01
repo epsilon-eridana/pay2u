@@ -99,6 +99,7 @@ class Service(models.Model):
     )
     options = models.ManyToManyField(
         Options,
+        through='ServiceOptions',
         related_name='services',
         verbose_name='Опции'
     )
@@ -109,3 +110,26 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ServiceOptions(models.Model):
+    """Вспомогательная модель: Сервис - Опция."""
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='Сервис подписки'
+    )
+    option = models.ForeignKey(
+        Options,
+        unique=True,
+        on_delete=models.CASCADE,
+        related_name='Опция сервиса'
+    )
+
+    class Meta:
+        verbose_name = 'Сервис-опции'
+        verbose_name_plural = verbose_name
+        constraints = [models.UniqueConstraint(
+            fields=['service', 'option'],
+            name='unique_options'
+        )]
