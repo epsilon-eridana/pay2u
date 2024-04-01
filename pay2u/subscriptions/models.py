@@ -1,5 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from pay2u.constants import MAX_LIMIT_VALUE, MIN_LIMIT_VALUE
 
 User = get_user_model()
 
@@ -68,6 +71,37 @@ class Options(models.Model):
         return self.name
 
 
+class Rate(models.Model):
+    """Модель тарифа подписки."""
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Название',
+    )
+    price = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        verbose_name='Цена'
+    )
+    duration = models.IntegerField(
+        validators=[
+            MaxValueValidator(
+                limit_value=MAX_LIMIT_VALUE,
+                message=f'Количество дне должно быть меньше {MAX_LIMIT_VALUE}.'
+            ),
+            MinValueValidator(
+                limit_value=MIN_LIMIT_VALUE,
+                message=f'Количество дне должно быть больше {MIN_LIMIT_VALUE}.'
+            )
+        ],
+        verbose_name='Количество дней'
+    )
+    cashback = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        verbose_name='Процент кэшбэка'
+    )
+
+
 class Service(models.Model):
     """Модель сервиса подписки."""
     name = models.CharField(
@@ -100,8 +134,14 @@ class Service(models.Model):
     options = models.ManyToManyField(
         Options,
         through='ServiceOptions',
-        related_name='services',
+        related_name='service',
         verbose_name='Опции'
+    )
+    rates = models.ManyToManyField(
+        Rate,
+        through='ServiceRate',
+        related_name='service',
+        verbose_name='Тарифы'
     )
 
     class Meta:
@@ -110,6 +150,29 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ServiceRate(models.Model):
+    """Вспомогательная модель: Сервис - Тариф."""
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='Сервис подписки'
+    )
+    rate = models.ForeignKey(
+        Rate,
+        unique=True,
+        on_delete=models.CASCADE,
+        related_name='Тариф сервиса'
+    )
+
+    class Meta:
+        verbose_name = 'Сервис-тариф'
+        verbose_name_plural = verbose_name
+        constraints = [models.UniqueConstraint(
+            fields=['service', 'rate'],
+            name='unique_rate'
+        )]
 
 
 class ServiceOptions(models.Model):
