@@ -35,7 +35,7 @@ class Tag(models.Model):
     slug = models.SlugField(
         max_length=200,
         unique=True,
-        verbose_name='Слаг',
+        verbose_name='Slug',
     )
     color = models.CharField(
         max_length=7,
@@ -45,6 +45,24 @@ class Tag(models.Model):
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
+
+    def __str__(self):
+        return self.name
+
+
+class Options(models.Model):
+    """Модель опций сервиса подписок."""
+    icon = models.ImageField(
+        upload_to='options/icons/'
+    )
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Название'
+    )
+
+    class Meta:
+        verbose_name = 'Опция'
+        verbose_name_plural = 'Опции'
 
     def __str__(self):
         return self.name
@@ -78,6 +96,11 @@ class Service(models.Model):
         Tag,
         related_name='services',
         verbose_name='Теги'
+    )
+    options = models.ManyToManyField(
+        Options,
+        related_name='services',
+        verbose_name='Опции'
     )
 
     class Meta:
