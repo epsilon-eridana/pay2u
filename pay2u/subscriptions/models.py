@@ -53,7 +53,7 @@ class Tag(models.Model):
         return self.name
 
 
-class Options(models.Model):
+class Option(models.Model):
     """Модель опций сервиса подписок."""
     icon = models.ImageField(
         upload_to='options/icons/'
@@ -101,6 +101,13 @@ class Rate(models.Model):
         verbose_name='Процент кэшбэка'
     )
 
+    class Meta:
+        verbose_name = 'Тариф'
+        verbose_name_plural = 'Тарифы'
+
+    def __str__(self):
+        return self.name
+
 
 class Service(models.Model):
     """Модель сервиса подписки."""
@@ -132,7 +139,7 @@ class Service(models.Model):
         verbose_name='Теги'
     )
     options = models.ManyToManyField(
-        Options,
+        Option,
         through='ServiceOptions',
         related_name='service',
         verbose_name='Опции'
@@ -185,7 +192,7 @@ class ServiceOptions(models.Model):
         verbose_name='Сервис подписки'
     )
     option = models.OneToOneField(
-        Options,
+        Option,
         on_delete=models.CASCADE,
         related_name='service_option',
         verbose_name='Опция сервиса'
