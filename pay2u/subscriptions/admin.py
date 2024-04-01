@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-    Service, Category, Rate, Option, ServiceRate, ServiceOptions
+    Service, Category, Rate, Option, ServiceRate, ServiceOptions, Tag
 )
 
 
@@ -28,6 +28,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'name', 'slug'
     )
+    prepopulated_fields = {'slug': ('name',)}
 
 
 @admin.register(Option)
@@ -42,3 +43,11 @@ class RateAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'name', 'price', 'duration', 'cashback'
     )
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'name', 'slug', 'color'
+    )
+    prepopulated_fields = {'slug': ('name',)}
