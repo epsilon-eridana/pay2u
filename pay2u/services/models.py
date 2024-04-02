@@ -79,6 +79,7 @@ class Option(models.Model):
 
 
 class Image(models.Model):
+    """Модель изображений сервиса."""
     image = models.ImageField(
         upload_to='services/images/',
         verbose_name='Изображение'
