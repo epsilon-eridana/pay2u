@@ -1,8 +1,6 @@
-from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-User = get_user_model()
 MAX_LIMIT_VALUE = 10000
 MIN_LIMIT_VALUE = 1
 MAX_LIMIT_VALUE_CASHBACK = 100
