@@ -17,7 +17,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "api.apps.ApiConfig",
-    "subscriptions.apps.SubscriptionsConfig",
+    "services.apps.SubscriptionsConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
