@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from .models import (
-    Service, Category, Rate, Option, ServiceRate, ServiceOptions, Tag
+    Service, Category, Rate, Option, ServiceRate,
+    ServiceOptions, Tag, Image, ServiceImage
 )
 
 
@@ -15,12 +16,19 @@ class ServiceOptionsInline(admin.TabularInline):
     extra = 1
 
 
+class ServiceImageInline(admin.TabularInline):
+    model = ServiceImage
+    extra = 2
+
+
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'name', 'category', 'short_description'
     )
-    inlines = [ServiceRateInline, ServiceOptionsInline]
+    inlines = [
+        ServiceRateInline, ServiceOptionsInline, ServiceImageInline
+    ]
 
 
 @admin.register(Category)
@@ -51,3 +59,10 @@ class TagAdmin(admin.ModelAdmin):
         'id', 'name', 'slug', 'color'
     )
     prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(Image)
+class ServiceImageAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'image'
+    )
