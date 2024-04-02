@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from .services.models import Rate
+from services.models import Rate
 
 User = get_user_model()
 MAX_LIMIT_VALUE_PRICE = 999999
