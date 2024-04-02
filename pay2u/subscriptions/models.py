@@ -71,6 +71,12 @@ class Option(models.Model):
         return self.name
 
 
+class Image(models.Model):
+    image = models.ImageField(
+        upload_to='services/images/'
+    )
+
+
 class Rate(models.Model):
     """Модель тарифа подписки."""
     name = models.CharField(
@@ -150,6 +156,15 @@ class Service(models.Model):
         related_name='service',
         verbose_name='Тарифы'
     )
+    images = models.ManyToManyField(
+        Image,
+        through='ServiceImage',
+        related_name='service',
+        verbose_name='Изображение'
+    )
+    url = models.URLField(
+        verbose_name='Ссылка на сервис'
+    )
 
     class Meta:
         verbose_name = 'Сервис'
@@ -157,6 +172,30 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ServiceImage(models.Model):
+    """Вспомогательная модель: Сервис - Изображение."""
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='service_image',
+        verbose_name='Сервис'
+    )
+    image = models.OneToOneField(
+        Image,
+        on_delete=models.CASCADE,
+        related_name='service_image',
+        verbose_name='Изображение'
+    )
+
+    class Meta:
+        verbose_name = 'Сервис-изображение'
+        verbose_name_plural = verbose_name
+        constraints = [models.UniqueConstraint(
+            fields=['service', 'image'],
+            name='unique_image'
+        )]
 
 
 class ServiceRate(models.Model):
