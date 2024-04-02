@@ -73,8 +73,16 @@ class Option(models.Model):
 
 class Image(models.Model):
     image = models.ImageField(
-        upload_to='services/images/'
+        upload_to='services/images/',
+        verbose_name='Изображение'
     )
+
+    class Meta:
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображения'
+
+    def __str__(self):
+        return str(self.pk)
 
 
 class Rate(models.Model):
