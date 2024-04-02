@@ -11,12 +11,14 @@ class Subscription(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='subscriptions'
+        related_name='subscriptions',
+        verbose_name='Пользователь'
     )
     rate = models.ForeignKey(
         Rate,
         on_delete=models.CASCADE,
-        related_name='subscriptions'
+        related_name='subscriptions',
+        verbose_name='Тариф'
     )
     date_start = models.DateTimeField(
         verbose_name='Дата начала',
