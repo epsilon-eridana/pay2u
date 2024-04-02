@@ -5,6 +5,13 @@ from django.db import models
 User = get_user_model()
 MAX_LIMIT_VALUE = 10000
 MIN_LIMIT_VALUE = 1
+MAX_LIMIT_VALUE_CASHBACK = 100
+MIN_LIMIT_VALUE_CASHBACK = 0
+DEFAULT_CASHBACK = 0
+MAX_LIMIT_VALUE_PRICE = 999999
+MIN_LIMIT_VALUE_PRICE = 0
+DEFAULT_PRICE = 0
+DEFAULT_DURATION = 1
 
 
 class Category(models.Model):
@@ -94,25 +101,54 @@ class Rate(models.Model):
     price = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name='Цена'
+        verbose_name='Цена',
+        validators=[
+            MaxValueValidator(
+                limit_value=MAX_LIMIT_VALUE_PRICE,
+                message=f'Значение должно быть меньше '
+                        f'{MAX_LIMIT_VALUE_PRICE}.'
+            ),
+            MinValueValidator(
+                limit_value=MIN_LIMIT_VALUE_PRICE,
+                message=f'Значение должно быть больше '
+                        f'{MIN_LIMIT_VALUE_PRICE}.'
+            )
+        ],
+        default=DEFAULT_PRICE
     )
     duration = models.IntegerField(
         validators=[
             MaxValueValidator(
                 limit_value=MAX_LIMIT_VALUE,
-                message=f'Количество дне должно быть меньше {MAX_LIMIT_VALUE}.'
+                message=f'Количество дне должно быть меньше '
+                        f'{MAX_LIMIT_VALUE}.'
             ),
             MinValueValidator(
                 limit_value=MIN_LIMIT_VALUE,
-                message=f'Количество дне должно быть больше {MIN_LIMIT_VALUE}.'
+                message=f'Количество дне должно быть больше '
+                        f'{MIN_LIMIT_VALUE}.'
             )
         ],
-        verbose_name='Количество дней'
+        verbose_name='Количество дней',
+        default=DEFAULT_DURATION
     )
     cashback = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name='Процент кэшбэка'
+        verbose_name='Процент кэшбэка',
+        validators=[
+            MaxValueValidator(
+                limit_value=MAX_LIMIT_VALUE_CASHBACK,
+                message=f'Значение должно быть меньше '
+                        f'{MAX_LIMIT_VALUE_CASHBACK}.'
+            ),
+            MinValueValidator(
+                limit_value=MIN_LIMIT_VALUE_CASHBACK,
+                message=f'Значение должно быть больше '
+                        f'{MIN_LIMIT_VALUE_CASHBACK}.'
+            )
+        ],
+        default=DEFAULT_CASHBACK
     )
 
     class Meta:
