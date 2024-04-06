@@ -49,6 +49,7 @@ class ServiceCategorySerializer(serializers.ModelSerializer):
     def get_is_followed(self, obj):
         user = self.context.get("view").request.user
         if user.is_anonymous:
+            # Добавлено на время разработки
             return False
         rate_ids = obj.rates.values_list('id', flat=True)
         return user.subscriptions.filter(
