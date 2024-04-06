@@ -47,8 +47,13 @@ class ServiceCategorySerializer(serializers.ModelSerializer):
         return None
 
     def get_is_followed(self, obj):
-        # Временная затычка, нужно написать менеджер модели.
-        return False
+        user = self.context.get("view").request.user
+        if user.is_anonymous:
+            return False
+        rate_ids = obj.rates.values_list('id', flat=True)
+        return user.subscriptions.filter(
+            rate_id__in=rate_ids
+        ).exists()
 
 
 class CategoryListSerializer(serializers.ModelSerializer):

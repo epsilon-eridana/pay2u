@@ -1,11 +1,13 @@
 from rest_framework import status, viewsets
 
 from .serializers import CategoryListSerializer, CategoryDetailSerializer
-from services.models import Category
+from services.models import Category, Service
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().prefetch_related(
+        'services'
+    )
     serializer_class = CategoryListSerializer
 
     def get_serializer_class(self):
