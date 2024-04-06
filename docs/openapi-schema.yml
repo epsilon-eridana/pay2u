@@ -1,0 +1,785 @@
+openapi: 3.0.2
+info:
+  title: 'Foodgram'
+  version: ''
+paths:
+    /categories/:
+      get:
+        security:
+          - Token: [ ]
+        summary: Список категорий
+        operationId: Список категорий
+        description: 'Доступно только авторизованным пользователям'
+        responses:
+          '200':
+            description: List of categories
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Category'
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Категории
+    /categories/{slug}/:
+      get:
+        security:
+          - Token: [ ]
+        summary: Содержимое категории
+        operationId: Содержимое категории
+        description: 'Доступно только авторизованным пользователям'
+        parameters:
+          - name: slug
+            in: path
+            required: true
+            description: "Уникальный слаг категории."
+            schema:
+              type: string
+        responses:
+          '200':
+            description: List of services in category
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CategoryService'
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Категории
+    /services/{id}/:
+      get:
+        security:
+          - Token: [ ]
+        summary: Детальная информация о сервисе
+        operationId: Детальная информация о сервисе
+        description: 'Доступно только авторизованным пользователям'
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: "Уникальный идентификатор сервиса."
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Detailed information about the service
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Service'
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Сервисы
+    /services/{id}/subscription/:
+      post:
+        summary: Оформить подписку
+        operationId: Оформить подписку
+        description: 'Доступно только авторизованным пользователям'
+        security:
+          - Token: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: "Уникальный идентификатор сервиса."
+            schema:
+              type: string
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rate:
+                    type: integer
+                    description: "Уникальный идентификатор тарифа."
+                    example: 0
+        responses:
+          '302':
+            description: Пользователь перенаправлен на страницу оплаты
+            headers:
+              Location:
+                description: URL страницы оплаты
+                schema:
+                  type: string
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Сервисы
+      put:
+        security:
+          - Token: [ ]
+        summary: Изменить тариф подписки
+        operationId: Изменить тариф подписки
+        description: 'Доступно только авторизованным пользователям'
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: "Уникальный идентификатор сервиса."
+            schema:
+              type: string
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rate:
+                    type: integer
+                    description: "Уникальный идентификатор тарифа."
+                    example: 0
+        responses:
+          '201':
+            description: Тариф успешно изменен
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Сервисы
+      delete:
+        security:
+          - Token: [ ]
+        summary: Подписка, отключить автоматическое продление
+        operationId: Подписка, отключить автоматическое продление
+        description: 'Доступно только авторизованным пользователям'
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: "Уникальный идентификатор сервиса."
+            schema:
+              type: string
+        responses:
+          '204':
+            description: Автоматическое продление отключено
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Сервисы
+    /api/auth/token/login/:
+      post:
+        summary: Получить токен авторизации
+        operationId: Получить токен авторизации
+        description: Используется для авторизации по телефону и паролю, чтобы далее использовать токен при запросах.
+        parameters: [ ]
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenCreate'
+        responses:
+          '201':
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TokenGetResponse'
+            description: ''
+        tags:
+          - Пользователи
+    /api/auth/token/logout/:
+      post:
+        summary: Удаление токена
+        operationId: Удаление токена
+        description: Удаляет токен текущего пользователя
+        parameters: [ ]
+        requestBody:
+          content:
+            application/json:
+              schema: { }
+        responses:
+          '204':
+            content:
+              application/json:
+                schema: { }
+            description: ''
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Пользователи
+    /users/subscriptions/:
+      get:
+        summary: Подписки пользователя
+        operationId: Подписки пользователя
+        description: 'Доступно только авторизованным пользователям'
+        security:
+          - Token: [ ]
+        responses:
+          '200':
+            description: List subscriptions of user
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/UserSubscription'
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Пользователи
+    /users/promocodes/:
+      get:
+        summary: Подписки промо коды
+        operationId: Подписки промо коды
+        description: 'Доступно только авторизованным пользователям'
+        security:
+          - Token: [ ]
+        responses:
+          '200':
+            description: List promo codes of user
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/UserPromoCodes'
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Пользователи
+    /users/payments/:
+      get:
+        summary: Покупки пользователя
+        operationId: Покупки пользователя
+        description: 'Доступно только авторизованным пользователям'
+        security:
+          - Token: [ ]
+        responses:
+          '200':
+            description: List payments of user
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/UserPayment'
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Пользователи
+    /users/payments/{id}/:
+      get:
+        summary: Покупка, детальная информация
+        operationId: Покупка, детальная информация
+        description: 'Доступно только авторизованным пользователям'
+        security:
+          - Token: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: "Уникальный идентификатор операции."
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Purchasing details
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/UserPaymentDetail'
+          '401':
+            $ref: '#/components/responses/AuthenticationError'
+        tags:
+          - Пользователи
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          nullable: false
+          uniqueItems: true
+          description: 'Название категории'
+          example: 'Category 1'
+        slug:
+          type: string
+          maxLength: 200
+          nullable: false
+          uniqueItems: true
+          description: 'Slug категории'
+          example: category_1
+    Tag:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          nullable: false
+          uniqueItems: true
+          description: 'Название'
+          example: 'ХИТ'
+        color:
+          type: string
+          nullable: true
+          maxLength: 7
+          description: 'Цвет в HEX'
+          example: '#E26C2D'
+        slug:
+          type: string
+          nullable: false
+          maxLength: 200
+          uniqueItems: true
+          pattern: ^[-a-zA-Z0-9_]+$
+          description: 'Уникальный слаг'
+          example: 'hit'
+    Option:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: 'Уникальный id'
+        icon:
+          type: string
+          nullable: false
+          description: 'Иконка'
+          format: url
+          example: 'https://example.org/media/services/options/icons/image.jpeg'
+        name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название'
+          example: 'Option 1'
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: 'Уникальный id'
+        image:
+          type: string
+          format: url
+          description: 'Изображение'
+          example: 'https://example.org/media/services/images/image.jpeg'
+    Rate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: 'Уникальный id'
+        name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название'
+          example: 'Rate 1'
+        price:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Цена'
+          example: '123.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+          minimum: 0
+          maximum: 999999
+          default: 0
+        duration:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Количество дней'
+          example: '123.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+          minimum: 1
+          maximum: 10000
+          default: 1
+        cashback:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Процент кэшбэка'
+          example: '50.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+          minimum: 0
+          maximum: 100
+          default: 0
+        is_active:
+          type: boolean
+          description: 'Активен'
+          default: true
+          example: true
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: 'Уникальный id'
+        name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название'
+          example: 'Service 1'
+        short_description:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Короткое описание'
+          example: 'Service short description'
+        description:
+          type: string
+          nullable: false
+          maxLength: 1000
+          description: 'Описание'
+          example: 'A very strange description of the service, perhaps it is unnecessary.'
+        category:
+          type: string
+          nullable: false
+          description: 'Категория'
+          example: 'category_1'
+        tags:
+          description: 'Список тегов'
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        icon:
+          type: string
+          nullable: false
+          description: 'Иконка'
+          format: url
+          example: 'https://example.org/media/services/icons/image.jpeg'
+        options:
+          description: 'Список опций'
+          type: array
+          items:
+            $ref: '#/components/schemas/Option'
+        rates:
+          description: 'Список тарифов'
+          type: array
+          items:
+            $ref: '#/components/schemas/Rate'
+        images:
+          description: 'Список изображений'
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        url:
+          type: string
+          nullable: false
+          description: 'Ссылка на сервис'
+          format: url
+          example: 'https://example.org/'
+        is_followed:
+          type: boolean
+          description: 'Подписан'
+          example: false
+    UserSubscription:
+      type: object
+      properties:
+        icon:
+          type: string
+          nullable: false
+          description: 'Иконка'
+          format: url
+          example: 'https://example.org/media/services/icons/image.jpeg'
+        name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название'
+          example: 'Service 1'
+        date_end:
+          type: string
+          format: datetime
+          description: 'Дата следующего списания'
+          example: '2016-11-11T00:00:00'
+        cashback:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Кэшбэк'
+          example: '45.45'
+          minimum: 0
+          maximum: 100
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+        price:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Цена'
+          example: '123.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+        price_month:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          nullable: true
+          description: 'Цена за месяц'
+          example: '123.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+        extension:
+          type: boolean
+          description: 'Продление'
+          default: true
+          example: true
+    UserPayment:
+      type: object
+      properties:
+        service_icon:
+          type: string
+          nullable: false
+          description: 'Иконка сервиса'
+          format: url
+          example: 'https://example.org/media/services/icons/image.jpeg'
+        service_name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название сервиса'
+          example: 'Service 1'
+        rate_name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название тарифа'
+          example: 'Service 1'
+        cashback:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Кэшбэк'
+          example: '45.45'
+          minimum: 0
+          maximum: 100
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+        price:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Цена'
+          example: '123.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+        date:
+          type: string
+          format: datetime
+          description: 'Дата покупки'
+          example: '2016-11-11T00:00:00'
+    UserPaymentDetail:
+      type: object
+      properties:
+        service_icon:
+          type: string
+          nullable: false
+          description: 'Иконка сервиса'
+          format: url
+          example: 'https://example.org/media/services/icons/image.jpeg'
+        service_name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название сервиса'
+          example: 'Service 1'
+        rate_name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название тарифа'
+          example: 'Service 1'
+        cashback:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Кэшбэк'
+          example: '45.45'
+          minimum: 0
+          maximum: 100
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+        price:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Цена'
+          example: '123.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+        date:
+          type: string
+          format: datetime
+          description: 'Дата покупки'
+          example: '2016-11-11T00:00:00'
+        account:
+          type: string
+          nullable: false
+          maxLength: 4
+          example: '0237'
+        type:
+          type: string
+          description: 'Тип'
+          enum:
+            - subscription
+            - promocode
+          example: 'subscription'
+    CategoryService:
+      type: object
+      properties:
+        service_icon:
+          type: string
+          nullable: false
+          description: 'Иконка сервиса'
+          format: url
+          example: 'https://example.org/media/services/icons/image.jpeg'
+        service_name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название сервиса'
+          example: 'Service 1'
+        cashback:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Кэшбэк'
+          example: '45.45'
+          minimum: 0
+          maximum: 100
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+        price:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Цена'
+          example: '123.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+        tags:
+          description: 'Список тегов'
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        is_followed:
+          type: boolean
+          description: 'Подписан'
+          example: false
+    UserPromoCodes:
+      type: object
+      properties:
+        service_icon:
+          type: string
+          nullable: false
+          description: 'Иконка сервиса'
+          format: url
+          example: 'https://example.org/media/services/icons/image.jpeg'
+        service_name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название сервиса'
+          example: 'Service 1'
+        category:
+          type: string
+          nullable: false
+          description: 'Категория'
+          example: 'category_1'
+        name:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Название промокода'
+          example: 'Promo code for 50% discount'
+        key:
+          type: string
+          nullable: false
+          maxLength: 200
+          description: 'Промокод'
+          example: '107546G745JJHHdfd4'
+        type:
+          type: string
+          nullable: false
+          description: 'Тип'
+          enum:
+            - subscription
+            - discount
+          example: 'subscription'
+    TokenCreate:
+      type: object
+      properties:
+        password:
+          type: string
+          example: 'Qwerty321!'
+        phone:
+          type: string
+          example: '+79993334455'
+          pattern: '^\\+\\d{11}$'
+    TokenGetResponse:
+      type: object
+      properties:
+        auth_token:
+          type: string
+    AuthenticationError:
+      description: Пользователь не авторизован
+      type: object
+      properties:
+        detail:
+          description: 'Описание ошибки'
+          example: "Учетные данные не были предоставлены."
+          type: string
+    PermissionDenied:
+      description: Недостаточно прав
+      type: object
+      properties:
+        detail:
+          description: 'Описание ошибки'
+          example: "У вас недостаточно прав для выполнения данного действия."
+          type: string
+    NotFound:
+      description: Объект не найден
+      type: object
+      properties:
+        detail:
+          description: 'Описание ошибки'
+          example: "Страница не найдена."
+          type: string
+
+
+  securitySchemes:
+    Token:
+      type: apiKey
+      description: 'Авторизация по токену. Все запросы от имени пользователя должны иметь заголовок: "Authorization: Token TOKENVALUE"'
+      name: Authorization
+      in: header
+  responses:
+    AuthenticationError:
+      description: Пользователь не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthenticationError'
+
+    PermissionDenied:
+      description: Недостаточно прав
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PermissionDenied'
+
+    NotFound:
+      description: Объект не найден
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
