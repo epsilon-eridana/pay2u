@@ -48,11 +48,11 @@ class Subscription(models.Model):
 
 class Payment(models.Model):
     """Модель покупок."""
-    subscription = models.OneToOneField(
-        Subscription,
+    rate = models.OneToOneField(
+        Rate,
         on_delete=models.CASCADE,
         related_name='payment',
-        verbose_name='Подписка'
+        verbose_name='Тариф'
     )
     price = models.DecimalField(
         max_digits=14,
@@ -94,6 +94,7 @@ class Payment(models.Model):
         auto_now_add=True,
         db_index=True
     )
+
 
     class Meta:
         verbose_name = 'Покупка'
