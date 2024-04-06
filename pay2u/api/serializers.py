@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from services.models import Category, Service, Tag
+from services.models import (
+    Category, Service, Tag, Rate, Image, Option
+)
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -80,4 +82,71 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
             'name',
             'slug',
             'services'
+        )
+
+
+class RateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rate
+        fields = (
+            'id',
+            'name',
+            'price',
+            'price_month',
+            'duration',
+            'cashback',
+            'is_active'
+        )
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = (
+            'id',
+            'image',
+        )
+
+
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = (
+            'id',
+            'icon',
+            'name'
+        )
+
+
+class ServiceSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(
+        many=True,
+        read_only=True
+    )
+    options = OptionSerializer(
+        many=True,
+        read_only=True
+    )
+    rates = RateSerializer(
+        many=True,
+        read_only=True
+    )
+    images = ImageSerializer(
+        many=True,
+        read_only=True
+    )
+
+    class Meta:
+        model = Service
+        fields = (
+            'id',
+            'name',
+            'short_description',
+            'description',
+            'category',
+            'tags',
+            'options',
+            'rates',
+            'images',
+            'url'
         )
