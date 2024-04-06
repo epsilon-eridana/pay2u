@@ -22,7 +22,7 @@ class PromoCode(models.Model):
         max_length=12,
         choices=Type.choices,
         default=Type.SUBSCRIPTION,
-        verbose_name='Тип операции'
+        verbose_name='Тип промокода'
     )
     service = models.ForeignKey(
         Service,
