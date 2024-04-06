@@ -19,7 +19,7 @@ class User(AbstractUser):
     phone = models.CharField(
         unique=True,
         max_length=12,
-        validators=REGEX_PHONE,
+        validators=(REGEX_PHONE,),
         verbose_name='Номер телефона пользователя',
         help_text='Укажите номер телефона пользователя'
     )
