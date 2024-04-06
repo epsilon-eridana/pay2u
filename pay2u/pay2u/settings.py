@@ -24,7 +24,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "api.apps.ApiConfig",
     "services.apps.ServicesConfig",
-    "subscriptions.apps.SubscriptionsConfig"
+    "subscriptions.apps.SubscriptionsConfig",
+    "promocodes.apps.PromocodesConfig",
 ]
 
 MIDDLEWARE = [
