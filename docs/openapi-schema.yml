@@ -388,6 +388,17 @@ components:
           minimum: 0
           maximum: 999999
           default: 0
+        price_month:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Месячная плата'
+          example: '123.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+          minimum: 0
+          maximum: 999999
+          default: 0
         duration:
           type: string
           format: decimal
