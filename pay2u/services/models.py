@@ -61,7 +61,7 @@ class Tag(models.Model):
 class Option(models.Model):
     """Модель опций сервиса подписок."""
     icon = models.ImageField(
-        upload_to='options/icons/'
+        upload_to='services/options/icons/'
     )
     name = models.CharField(
         max_length=200,
@@ -179,7 +179,7 @@ class Service(models.Model):
         verbose_name='Категория'
     )
     icon = models.ImageField(
-        upload_to='services/images/',
+        upload_to='services/icons/',
         verbose_name='Иконка'
     )
     tags = models.ManyToManyField(
