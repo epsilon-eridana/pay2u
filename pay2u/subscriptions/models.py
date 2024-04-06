@@ -33,6 +33,10 @@ class Subscription(models.Model):
         verbose_name='Дата окончания',
         db_index=True
     )
+    extension = models.BooleanField(
+        default=True,
+        verbose_name='Статус продления'
+    )
 
     class Meta:
         verbose_name = 'Подписка'
