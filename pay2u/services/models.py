@@ -20,7 +20,7 @@ class Category(models.Model):
         verbose_name='Название'
     )
     slug = models.SlugField(
-        unique=True,
+        primary_key=True,
         max_length=200,
         verbose_name='Slug'
     )
@@ -41,8 +41,8 @@ class Tag(models.Model):
         verbose_name='Название',
     )
     slug = models.SlugField(
+        primary_key=True,
         max_length=200,
-        unique=True,
         verbose_name='Slug',
     )
     color = models.CharField(
