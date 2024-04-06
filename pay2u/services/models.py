@@ -115,6 +115,24 @@ class Rate(models.Model):
         ],
         default=DEFAULT_PRICE
     )
+    price_month = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        verbose_name='Месячная плата',
+        validators=[
+            MaxValueValidator(
+                limit_value=MAX_LIMIT_VALUE_PRICE,
+                message=f'Значение должно быть меньше '
+                        f'{MAX_LIMIT_VALUE_PRICE}.'
+            ),
+            MinValueValidator(
+                limit_value=MIN_LIMIT_VALUE_PRICE,
+                message=f'Значение должно быть больше '
+                        f'{MIN_LIMIT_VALUE_PRICE}.'
+            )
+        ],
+        default=DEFAULT_PRICE
+    )
     duration = models.IntegerField(
         validators=[
             MaxValueValidator(
