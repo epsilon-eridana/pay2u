@@ -19,6 +19,7 @@ class PromoCode(models.Model):
         verbose_name='Ключ активации'
     )
     type = models.CharField(
+        max_length=12,
         choices=Type.choices,
         default=Type.SUBSCRIPTION,
         verbose_name='Тип операции'
