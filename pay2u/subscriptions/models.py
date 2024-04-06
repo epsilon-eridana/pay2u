@@ -48,6 +48,9 @@ class Subscription(models.Model):
 
 class Payment(models.Model):
     """Модель покупок."""
+    class Type(models.TextChoices):
+        SUBSCRIPTION = "SUBSCRIPTION", "subscription"
+        PROMOCODE = "PROMOCODE", "promocode"
     rate = models.OneToOneField(
         Rate,
         on_delete=models.CASCADE,
@@ -94,7 +97,12 @@ class Payment(models.Model):
         auto_now_add=True,
         db_index=True
     )
-
+    type = models.CharField(
+        max_length=12,
+        choices=Type.choices,
+        default=Type.SUBSCRIPTION,
+        verbose_name='Тип операции'
+    )
 
     class Meta:
         verbose_name = 'Покупка'
