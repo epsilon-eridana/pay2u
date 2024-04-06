@@ -115,4 +115,4 @@ class Payment(models.Model):
         verbose_name_plural = 'Покупки'
 
     def __str__(self):
-        return f'{self.subscription} / {self.price}'
+        return f'{self.rate} / {self.price} / {self.user}'
