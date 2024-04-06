@@ -1,14 +1,16 @@
+from decimal import Decimal
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 MAX_LIMIT_VALUE = 10000
 MIN_LIMIT_VALUE = 1
-MAX_LIMIT_VALUE_CASHBACK = 100
-MIN_LIMIT_VALUE_CASHBACK = 0
-DEFAULT_CASHBACK = 0
-MAX_LIMIT_VALUE_PRICE = 999999
-MIN_LIMIT_VALUE_PRICE = 0
-DEFAULT_PRICE = 0
+MAX_LIMIT_VALUE_CASHBACK = Decimal(100)
+MIN_LIMIT_VALUE_CASHBACK = Decimal(0)
+DEFAULT_CASHBACK = Decimal(0)
+MAX_LIMIT_VALUE_PRICE = Decimal(999999)
+MIN_LIMIT_VALUE_PRICE = Decimal(0)
+DEFAULT_PRICE = Decimal(0)
 DEFAULT_DURATION = 1
 
 
@@ -166,6 +168,10 @@ class Rate(models.Model):
             )
         ],
         default=DEFAULT_CASHBACK
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Статус'
     )
 
     class Meta:
