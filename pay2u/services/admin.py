@@ -34,7 +34,7 @@ class ServiceAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'name', 'slug'
+        'name', 'slug'
     )
     prepopulated_fields = {'slug': ('name',)}
 
@@ -42,7 +42,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Option)
 class OptionAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'name'
+        'id', 'name', 'icon'
     )
 
 
@@ -56,7 +56,7 @@ class RateAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'name', 'slug', 'color'
+        'name', 'slug', 'color'
     )
     prepopulated_fields = {'slug': ('name',)}
 

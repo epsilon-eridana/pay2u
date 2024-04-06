@@ -1,7 +1,7 @@
 from django.db import models
 
 from services.models import Service
-from subscriptions.models import User
+from users.models import User
 
 
 class PromoCode(models.Model):
@@ -22,7 +22,7 @@ class PromoCode(models.Model):
         max_length=12,
         choices=Type.choices,
         default=Type.SUBSCRIPTION,
-        verbose_name='Тип операции'
+        verbose_name='Тип промокода'
     )
     service = models.ForeignKey(
         Service,

@@ -20,7 +20,7 @@ class Category(models.Model):
         verbose_name='Название'
     )
     slug = models.SlugField(
-        unique=True,
+        primary_key=True,
         max_length=200,
         verbose_name='Slug'
     )
@@ -41,8 +41,8 @@ class Tag(models.Model):
         verbose_name='Название',
     )
     slug = models.SlugField(
+        primary_key=True,
         max_length=200,
-        unique=True,
         verbose_name='Slug',
     )
     color = models.CharField(
@@ -61,7 +61,7 @@ class Tag(models.Model):
 class Option(models.Model):
     """Модель опций сервиса подписок."""
     icon = models.ImageField(
-        upload_to='options/icons/'
+        upload_to='services/options/icons/'
     )
     name = models.CharField(
         max_length=200,
@@ -179,7 +179,7 @@ class Service(models.Model):
         verbose_name='Категория'
     )
     icon = models.ImageField(
-        upload_to='services/images/',
+        upload_to='services/icons/',
         verbose_name='Иконка'
     )
     tags = models.ManyToManyField(
