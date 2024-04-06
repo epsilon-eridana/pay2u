@@ -103,6 +103,12 @@ class Payment(models.Model):
         default=Type.SUBSCRIPTION,
         verbose_name='Тип операции'
     )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='payment',
+        verbose_name='Пользователь'
+    )
 
     class Meta:
         verbose_name = 'Покупка'
