@@ -1,7 +1,7 @@
 from django.db import models
 
 from services.models import Service
-from subscriptions.models import User
+from users.models import User
 
 
 class PromoCode(models.Model):

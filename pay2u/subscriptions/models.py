@@ -3,8 +3,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from services.models import Rate
+from users.models import User
 
-User = get_user_model()
 MAX_LIMIT_VALUE_PRICE = 999999
 MIN_LIMIT_VALUE_PRICE = 0
 DEFAULT_CASHBACK = 0
