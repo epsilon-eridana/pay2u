@@ -3,8 +3,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from services.models import Rate
+from users.models import User
 
-User = get_user_model()
 MAX_LIMIT_VALUE_PRICE = 999999
 MIN_LIMIT_VALUE_PRICE = 0
 DEFAULT_CASHBACK = 0
@@ -26,12 +26,15 @@ class Subscription(models.Model):
     )
     date_start = models.DateTimeField(
         verbose_name='Дата начала',
-        auto_now_add=True,
         db_index=True
     )
     date_end = models.DateTimeField(
         verbose_name='Дата окончания',
         db_index=True
+    )
+    extension = models.BooleanField(
+        default=True,
+        verbose_name='Статус продления'
     )
 
     class Meta:
@@ -44,11 +47,19 @@ class Subscription(models.Model):
 
 class Payment(models.Model):
     """Модель покупок."""
-    subscription = models.OneToOneField(
-        Subscription,
+    class Type(models.TextChoices):
+        SUBSCRIPTION = "SUBSCRIPTION", "subscription"
+        PROMOCODE = "PROMOCODE", "promocode"
+
+    class StatusPay(models.TextChoices):
+        AWAITING = "AWAITING", "awaiting"
+        PAID = "PAID", "paid"
+
+    rate = models.OneToOneField(
+        Rate,
         on_delete=models.CASCADE,
         related_name='payment',
-        verbose_name='Подписка'
+        verbose_name='Тариф'
     )
     price = models.DecimalField(
         max_digits=14,
@@ -90,10 +101,28 @@ class Payment(models.Model):
         auto_now_add=True,
         db_index=True
     )
+    type = models.CharField(
+        max_length=12,
+        choices=Type.choices,
+        default=Type.SUBSCRIPTION,
+        verbose_name='Тип операции'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='payment',
+        verbose_name='Пользователь'
+    )
+    status_pay = models.CharField(
+        max_length=12,
+        choices=StatusPay.choices,
+        default=StatusPay.AWAITING,
+        verbose_name='Статус оплаты'
+    )
 
     class Meta:
         verbose_name = 'Покупка'
         verbose_name_plural = 'Покупки'
 
     def __str__(self):
-        return f'{self.subscription} / {self.price}'
+        return f'{self.rate} / {self.price} / {self.user}'

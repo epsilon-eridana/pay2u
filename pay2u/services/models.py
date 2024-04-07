@@ -1,14 +1,16 @@
+from decimal import Decimal
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 MAX_LIMIT_VALUE = 10000
 MIN_LIMIT_VALUE = 1
-MAX_LIMIT_VALUE_CASHBACK = 100
-MIN_LIMIT_VALUE_CASHBACK = 0
-DEFAULT_CASHBACK = 0
-MAX_LIMIT_VALUE_PRICE = 999999
-MIN_LIMIT_VALUE_PRICE = 0
-DEFAULT_PRICE = 0
+MAX_LIMIT_VALUE_CASHBACK = Decimal(100)
+MIN_LIMIT_VALUE_CASHBACK = Decimal(0)
+DEFAULT_CASHBACK = Decimal(0)
+MAX_LIMIT_VALUE_PRICE = Decimal(999999)
+MIN_LIMIT_VALUE_PRICE = Decimal(0)
+DEFAULT_PRICE = Decimal(0)
 DEFAULT_DURATION = 1
 
 
@@ -20,7 +22,7 @@ class Category(models.Model):
         verbose_name='Название'
     )
     slug = models.SlugField(
-        unique=True,
+        primary_key=True,
         max_length=200,
         verbose_name='Slug'
     )
@@ -41,8 +43,8 @@ class Tag(models.Model):
         verbose_name='Название',
     )
     slug = models.SlugField(
+        primary_key=True,
         max_length=200,
-        unique=True,
         verbose_name='Slug',
     )
     color = models.CharField(
@@ -61,7 +63,7 @@ class Tag(models.Model):
 class Option(models.Model):
     """Модель опций сервиса подписок."""
     icon = models.ImageField(
-        upload_to='options/icons/'
+        upload_to='services/options/icons/'
     )
     name = models.CharField(
         max_length=200,
@@ -115,6 +117,24 @@ class Rate(models.Model):
         ],
         default=DEFAULT_PRICE
     )
+    price_month = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        verbose_name='Месячная плата',
+        validators=[
+            MaxValueValidator(
+                limit_value=MAX_LIMIT_VALUE_PRICE,
+                message=f'Значение должно быть меньше '
+                        f'{MAX_LIMIT_VALUE_PRICE}.'
+            ),
+            MinValueValidator(
+                limit_value=MIN_LIMIT_VALUE_PRICE,
+                message=f'Значение должно быть больше '
+                        f'{MIN_LIMIT_VALUE_PRICE}.'
+            )
+        ],
+        default=DEFAULT_PRICE
+    )
     duration = models.IntegerField(
         validators=[
             MaxValueValidator(
@@ -149,6 +169,10 @@ class Rate(models.Model):
         ],
         default=DEFAULT_CASHBACK
     )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Статус'
+    )
 
     class Meta:
         verbose_name = 'Тариф'
@@ -179,7 +203,7 @@ class Service(models.Model):
         verbose_name='Категория'
     )
     icon = models.ImageField(
-        upload_to='services/images/',
+        upload_to='services/icons/',
         verbose_name='Иконка'
     )
     tags = models.ManyToManyField(

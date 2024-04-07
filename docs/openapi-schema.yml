@@ -388,6 +388,17 @@ components:
           minimum: 0
           maximum: 999999
           default: 0
+        price_month:
+          type: string
+          format: decimal
+          maxLength: 16
+          minLength: 1
+          description: 'Месячная плата'
+          example: '123.45'
+          pattern: '^\\d{1,14}\\.\\d{2}$'
+          minimum: 0
+          maximum: 999999
+          default: 0
         duration:
           type: string
           format: decimal
@@ -484,6 +495,10 @@ components:
     UserSubscription:
       type: object
       properties:
+        id:
+          type: integer
+          readOnly: true
+          description: 'Уникальный id'
         icon:
           type: string
           nullable: false
@@ -536,6 +551,10 @@ components:
     UserPayment:
       type: object
       properties:
+        id:
+          type: integer
+          readOnly: true
+          description: 'Уникальный id'
         service_icon:
           type: string
           nullable: false
@@ -580,6 +599,10 @@ components:
     UserPaymentDetail:
       type: object
       properties:
+        id:
+          type: integer
+          readOnly: true
+          description: 'Уникальный id'
         service_icon:
           type: string
           nullable: false
@@ -636,13 +659,17 @@ components:
     CategoryService:
       type: object
       properties:
-        service_icon:
+        id:
+          type: integer
+          readOnly: true
+          description: 'Уникальный id'
+        icon:
           type: string
           nullable: false
           description: 'Иконка сервиса'
           format: url
           example: 'https://example.org/media/services/icons/image.jpeg'
-        service_name:
+        name:
           type: string
           nullable: false
           maxLength: 200
@@ -658,7 +685,7 @@ components:
           minimum: 0
           maximum: 100
           pattern: '^\\d{1,14}\\.\\d{2}$'
-        price:
+        price_month:
           type: string
           format: decimal
           maxLength: 16
