@@ -26,7 +26,6 @@ class Subscription(models.Model):
     )
     date_start = models.DateTimeField(
         verbose_name='Дата начала',
-        auto_now_add=True,
         db_index=True
     )
     date_end = models.DateTimeField(
@@ -51,6 +50,11 @@ class Payment(models.Model):
     class Type(models.TextChoices):
         SUBSCRIPTION = "SUBSCRIPTION", "subscription"
         PROMOCODE = "PROMOCODE", "promocode"
+
+    class StatusPay(models.TextChoices):
+        AWAITING = "AWAITING", "awaiting"
+        PAID = "PAID", "paid"
+
     rate = models.OneToOneField(
         Rate,
         on_delete=models.CASCADE,
@@ -108,6 +112,12 @@ class Payment(models.Model):
         on_delete=models.CASCADE,
         related_name='payment',
         verbose_name='Пользователь'
+    )
+    status_pay = models.CharField(
+        max_length=12,
+        choices=StatusPay.choices,
+        default=StatusPay.AWAITING,
+        verbose_name='Статус оплаты'
     )
 
     class Meta:
